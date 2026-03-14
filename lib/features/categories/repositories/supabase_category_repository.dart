@@ -16,22 +16,41 @@ class SupabaseCategoryRepository implements ICategoryRepository {
   const SupabaseCategoryRepository(this._client);
 
   @override
-  Future<List<CategoryModel>> getCategories(String examId) async {
+  Future<List<CategoryModel>> getCategories(String examId, int year) async {
+    // Step 1: find which categories have papers for this exam+year, with live count
+    final paperRows = await _client
+        .from('papers')
+        .select('category_id, category_name')
+        .eq('exam_id', examId)
+        .eq('year', year);
+
+    final papers = paperRows as List<dynamic>;
+    if (papers.isEmpty) return [];
+
+    // Build category_id → count map
+    final countMap = <String, int>{};
+    for (final row in papers) {
+      final id = row['category_id'] as String;
+      countMap[id] = (countMap[id] ?? 0) + 1;
+    }
+
+    // Step 2: fetch full category details for only those IDs
     final rows = await _client
         .from(_table)
         .select()
-        .eq('exam_id', examId)
+        .inFilter('id', countMap.keys.toList())
         .order('name', ascending: true);
 
     return (rows as List<dynamic>).map((row) {
       final r = row as Map<String, dynamic>;
+      final id = r['id'] as String;
       return CategoryModel(
-        id:          r['id'] as String,
+        id:          id,
         name:        r['name'] as String,
         examId:      r['exam_id'] as String,
         icon:        IconMapper.get(r['icon_name'] as String?),
         description: r['description'] as String? ?? '',
-        paperCount:  r['paper_count'] as int? ?? 0,
+        paperCount:  countMap[id] ?? 0,  // live count for this year
       );
     }).toList();
   }

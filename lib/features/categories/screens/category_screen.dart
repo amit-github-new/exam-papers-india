@@ -24,7 +24,9 @@ class CategoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final categoriesAsync = ref.watch(categoriesProvider(examId));
+    final categoriesAsync = ref.watch(
+      categoriesProvider(CategoryParams(examId: examId, year: year)),
+    );
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -41,7 +43,9 @@ class CategoryScreen extends ConsumerWidget {
             const AppLoadingWidget(message: 'Loading categories…'),
         error: (err, _) => AppErrorWidget(
           message: err.toString(),
-          onRetry: () => ref.invalidate(categoriesProvider(examId)),
+          onRetry: () => ref.invalidate(
+            categoriesProvider(CategoryParams(examId: examId, year: year)),
+          ),
         ),
         data: (categories) {
           if (categories.isEmpty) {
