@@ -48,7 +48,7 @@ class ExamModel {
         'short_name':   shortName,
         'description':  description,
         'conducted_by': conductedBy,
-        'color_value':  color.value,
+        'color_value':  color.toARGB32(),
         'total_papers': totalPapers,
       };
 

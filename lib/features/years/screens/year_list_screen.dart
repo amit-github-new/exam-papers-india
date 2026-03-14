@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/app_empty_widget.dart';
 import '../../../core/widgets/app_error_widget.dart';
 import '../../../core/widgets/app_loading_widget.dart';
@@ -25,7 +24,7 @@ class YearListScreen extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: _AppBarTitle(examName: examName, subtitle: 'Select Year'),
         leading: IconButton(
@@ -88,7 +87,7 @@ class _AppBarTitle extends StatelessWidget {
         Text(
           subtitle,
           style: theme.textTheme.bodySmall
-              ?.copyWith(color: AppColors.textTertiary),
+              ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
         ),
       ],
     );

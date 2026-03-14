@@ -147,8 +147,6 @@ class AppTheme {
       onSurfaceVariant:     AppColors.textSecondary,
       outline:              AppColors.border,
       outlineVariant:       AppColors.borderLight,
-      background:           AppColors.background,
-      onBackground:         AppColors.textPrimary,
       shadow:               Color(0xFF000000),
       scrim:                Color(0xFF000000),
       inverseSurface:       AppColors.textPrimary,
@@ -180,8 +178,6 @@ class AppTheme {
       onSurfaceVariant:     Color(0xFF94A3B8), // Slate-400
       outline:              Color(0xFF475569), // Slate-600
       outlineVariant:       Color(0xFF334155), // Slate-700
-      background:           Color(0xFF0F172A), // Slate-900
-      onBackground:         Color(0xFFF1F5F9),
       shadow:               Color(0xFF000000),
       scrim:                Color(0xFF000000),
       inverseSurface:       Color(0xFFF1F5F9),

@@ -70,7 +70,7 @@ class YearTile extends StatelessWidget {
                           ),
                           if (year.isLatest) ...[
                             const SizedBox(width: 8),
-                            _Badge(
+                            const _Badge(
                               label: 'Latest',
                               color: AppColors.success,
                               bg: AppColors.successContainer,

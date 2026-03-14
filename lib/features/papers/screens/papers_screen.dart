@@ -41,7 +41,6 @@ class PapersScreen extends ConsumerWidget {
       bookmarkProvider.select((list) => list.map((p) => p.id).toSet()),
     );
     final theme = Theme.of(context);
-    final cs = theme.colorScheme;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,

@@ -18,17 +18,3 @@ class ExamRepository implements IExamRepository {
   }
 }
 
-// ── TODO: Supabase implementation (uncomment & wire when ready) ───────────────
-//
-// class SupabaseExamRepository implements IExamRepository {
-//   final SupabaseClient _client;
-//   const SupabaseExamRepository(this._client);
-//
-//   @override
-//   Future<List<ExamModel>> getExams() async {
-//     final rows = await _client.from('exams').select().order('name');
-//     return rows.map((r) => ExamModel.fromJson(r, icon: _iconFor(r['id']))).toList();
-//   }
-//
-//   IconData _iconFor(String id) { ... }
-// }
