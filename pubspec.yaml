@@ -1,0 +1,46 @@
+name: exam_papers_app
+description: A production-ready competitive exam previous year papers app.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State management
+  flutter_riverpod: ^2.5.1
+
+  # Navigation
+  go_router: ^13.2.0
+
+  # Typography
+  google_fonts: ^6.2.1
+
+  # Image caching
+  cached_network_image: ^3.3.1
+
+  # URL launching (for PDF open/download fallback)
+  url_launcher: ^6.2.5
+
+  # Icons
+  cupertino_icons: ^1.0.6
+
+  # PDF Viewer
+  syncfusion_flutter_pdfviewer: ^27.1.48
+
+  # Supabase
+  supabase_flutter: ^2.8.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/icons/
