@@ -48,6 +48,9 @@ dependencies:
 
   flutter_native_splash: ^2.4.3
 
+  # In-app review
+  in_app_review: ^2.0.9
+
   # Firebase
   firebase_core: ^3.13.1
   firebase_analytics: ^11.4.6

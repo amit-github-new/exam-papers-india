@@ -6,6 +6,7 @@ import '../../../core/navigation/app_router.dart';
 import '../../../core/widgets/app_empty_widget.dart';
 import '../../../core/widgets/app_error_widget.dart';
 import '../../../core/widgets/app_loading_widget.dart';
+import '../../../core/services/review_service.dart';
 import '../../downloads/providers/download_provider.dart';
 import '../../viewer/providers/pdf_cache_provider.dart';
 import '../providers/paper_provider.dart';
@@ -119,7 +120,9 @@ class _PapersScreenState extends ConsumerState<PapersScreen> {
                 isFileAvailable: hasFile,
 
                 onOpen: hasFile
-                    ? () => context.pushNamed(
+                    ? () {
+                        ReviewService.onPaperOpened();
+                        context.pushNamed(
                           AppRoutes.viewer,
                           queryParameters: {
                             'url':          paper.pdfUrl!,
@@ -130,7 +133,8 @@ class _PapersScreenState extends ConsumerState<PapersScreen> {
                             'categoryId':   paper.categoryId,
                             'categoryName': paper.categoryName,
                           },
-                        )
+                        );
+                      }
                     : null,
 
                 onDownload: hasFile
@@ -138,14 +142,17 @@ class _PapersScreenState extends ConsumerState<PapersScreen> {
                     : null,
 
                 onRead: isDownloaded
-                    ? () => context.pushNamed(
+                    ? () {
+                        ReviewService.onPaperOpened();
+                        context.pushNamed(
                           AppRoutes.viewer,
                           queryParameters: {
                             'url':       paper.pdfUrl ?? '',
                             'title':     paper.title,
                             'localPath': dlState.localPath ?? '',
                           },
-                        )
+                        );
+                      }
                     : null,
 
                 onDelete: isDownloaded
