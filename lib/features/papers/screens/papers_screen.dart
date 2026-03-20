@@ -6,6 +6,7 @@ import '../../../core/navigation/app_router.dart';
 import '../../../core/widgets/app_empty_widget.dart';
 import '../../../core/widgets/app_error_widget.dart';
 import '../../../core/widgets/app_loading_widget.dart';
+import '../../../core/services/ad_service.dart';
 import '../../../core/services/review_service.dart';
 import '../../downloads/providers/download_provider.dart';
 import '../../viewer/providers/pdf_cache_provider.dart';
@@ -122,18 +123,22 @@ class _PapersScreenState extends ConsumerState<PapersScreen> {
                 onOpen: hasFile
                     ? () {
                         ReviewService.onPaperOpened();
-                        context.pushNamed(
-                          AppRoutes.viewer,
-                          queryParameters: {
-                            'url':          paper.pdfUrl!,
-                            'title':        paper.title,
-                            'paperId':      paper.id,
-                            'examId':       paper.examId,
-                            'year':         paper.year.toString(),
-                            'categoryId':   paper.categoryId,
-                            'categoryName': paper.categoryName,
-                          },
-                        );
+                        AdService.showInterstitial(onDone: () {
+                          if (context.mounted) {
+                            context.pushNamed(
+                              AppRoutes.viewer,
+                              queryParameters: {
+                                'url':          paper.pdfUrl!,
+                                'title':        paper.title,
+                                'paperId':      paper.id,
+                                'examId':       paper.examId,
+                                'year':         paper.year.toString(),
+                                'categoryId':   paper.categoryId,
+                                'categoryName': paper.categoryName,
+                              },
+                            );
+                          }
+                        });
                       }
                     : null,
 
@@ -144,14 +149,18 @@ class _PapersScreenState extends ConsumerState<PapersScreen> {
                 onRead: isDownloaded
                     ? () {
                         ReviewService.onPaperOpened();
-                        context.pushNamed(
-                          AppRoutes.viewer,
-                          queryParameters: {
-                            'url':       paper.pdfUrl ?? '',
-                            'title':     paper.title,
-                            'localPath': dlState.localPath ?? '',
-                          },
-                        );
+                        AdService.showInterstitial(onDone: () {
+                          if (context.mounted) {
+                            context.pushNamed(
+                              AppRoutes.viewer,
+                              queryParameters: {
+                                'url':       paper.pdfUrl ?? '',
+                                'title':     paper.title,
+                                'localPath': dlState.localPath ?? '',
+                              },
+                            );
+                          }
+                        });
                       }
                     : null,
 

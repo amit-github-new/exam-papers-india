@@ -11,6 +11,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'core/constants/app_constants.dart';
 import 'core/navigation/app_router.dart';
 import 'core/providers/theme_provider.dart';
+import 'core/services/ad_service.dart';
 import 'core/theme/app_theme.dart';
 import 'firebase_options.dart';
 
@@ -30,6 +31,9 @@ Future<void> main() async {
 
   // Enable Analytics data collection
   await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
+
+  // ── AdMob ─────────────────────────────────────────────────────────────────
+  await AdService.initialize();
 
   // ── Supabase ──────────────────────────────────────────────────────────────
   await Supabase.initialize(
