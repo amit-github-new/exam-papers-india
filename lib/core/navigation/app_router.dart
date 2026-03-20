@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/splash/screens/splash_screen.dart';
 import '../../features/exams/screens/exam_list_screen.dart';
 import '../../features/years/screens/year_list_screen.dart';
 import '../../features/categories/screens/category_screen.dart';
@@ -13,7 +12,6 @@ import '../../features/downloads/screens/downloads_screen.dart';
 // Route name constants — use these instead of raw strings.
 class AppRoutes {
   AppRoutes._();
-  static const String splash     = 'splash';
   static const String home       = 'home';
   static const String years      = 'years';
   static const String categories = 'categories';
@@ -24,16 +22,9 @@ class AppRoutes {
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/splash',
+    initialLocation: '/',
     debugLogDiagnostics: false,
     routes: [
-      // ── Splash ────────────────────────────────────────────────────────
-      GoRoute(
-        path: '/splash',
-        name: AppRoutes.splash,
-        builder: (context, state) => const SplashScreen(),
-      ),
-
       // ── Home: Exam list ───────────────────────────────────────────────
       GoRoute(
         path: '/',
