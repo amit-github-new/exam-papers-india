@@ -77,7 +77,7 @@ class AppDrawer extends ConsumerWidget {
               onTap: () {
                 Navigator.of(context).pop();
                 launchUrl(
-                  Uri.parse('https://unilabsdev.github.io/exam-papers-privacy-policy/'),
+                  Uri.parse('https://sites.google.com/view/exam-papers-ind-privacy-policy/home'),
                   mode: LaunchMode.externalApplication,
                 );
               },
