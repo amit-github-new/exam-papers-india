@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../constants/app_constants.dart';
 import '../providers/theme_provider.dart';
 
 class AppDrawer extends ConsumerWidget {
@@ -135,7 +136,7 @@ class AppDrawer extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
               child: Text(
-                'Version 1.0.0',
+                'Version ${AppConstants.appVersion}',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: cs.onSurfaceVariant,
                     ),
