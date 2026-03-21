@@ -8,7 +8,6 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../models/paper_model.dart';
 import '../../downloads/providers/download_provider.dart';
-import '../providers/pdf_cache_provider.dart';
 
 /// Full-featured PDF Viewer backed by syncfusion_flutter_pdfviewer.
 ///
@@ -265,49 +264,23 @@ class _PDFViewerScreenState extends ConsumerState<PDFViewerScreen> {
     // ── Online: NULL url → File Not Available ──────────────────────────────
     if (widget.pdfUrl.isEmpty) return const _InvalidUrlView();
 
-    final cacheState = ref.watch(pdfCacheProvider(widget.pdfUrl));
-
-    // File not uploaded to storage — show unavailable screen immediately
-    if (cacheState.hasError) {
-      return _FileUnavailableView(onBack: () => Navigator.of(context).pop());
-    }
-
     return Stack(
       children: [
-        // PDF Viewer — use local cached file if ready, else stream from network
+        // PDF Viewer — stream directly from network (no double-download)
         if (!_hasError)
           Padding(
             padding: EdgeInsets.only(top: _isSearchOpen ? 56 : 0),
-            child: Builder(builder: (context) {
-              final cachedPath = cacheState.valueOrNull;
-              final useFile = cachedPath != null &&
-                  cachedPath.isNotEmpty &&
-                  cachedPath != widget.pdfUrl;
-              if (useFile) {
-                return SfPdfViewer.file(
-                  File(cachedPath),
-                  controller: _controller,
-                  enableDoubleTapZooming: true,
-                  enableTextSelection: true,
-                  pageLayoutMode: PdfPageLayoutMode.continuous,
-                  scrollDirection: PdfScrollDirection.vertical,
-                  onDocumentLoaded: _onLoaded,
-                  onDocumentLoadFailed: _onLoadFailed,
-                  onPageChanged: _onPageChanged,
-                );
-              }
-              return SfPdfViewer.network(
-                widget.pdfUrl,
-                controller: _controller,
-                enableDoubleTapZooming: true,
-                enableTextSelection: true,
-                pageLayoutMode: PdfPageLayoutMode.continuous,
-                scrollDirection: PdfScrollDirection.vertical,
-                onDocumentLoaded: _onLoaded,
-                onDocumentLoadFailed: _onLoadFailed,
-                onPageChanged: _onPageChanged,
-              );
-            }),
+            child: SfPdfViewer.network(
+              widget.pdfUrl,
+              controller: _controller,
+              enableDoubleTapZooming: true,
+              enableTextSelection: true,
+              pageLayoutMode: PdfPageLayoutMode.continuous,
+              scrollDirection: PdfScrollDirection.vertical,
+              onDocumentLoaded: _onLoaded,
+              onDocumentLoadFailed: _onLoadFailed,
+              onPageChanged: _onPageChanged,
+            ),
           ),
 
         // Search bar

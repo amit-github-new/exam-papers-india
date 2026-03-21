@@ -9,7 +9,6 @@ import '../../../core/widgets/app_loading_widget.dart';
 import '../../../core/services/ad_service.dart';
 import '../../../core/services/review_service.dart';
 import '../../downloads/providers/download_provider.dart';
-import '../../viewer/providers/pdf_cache_provider.dart';
 import '../providers/paper_provider.dart';
 import '../repositories/paper_repository.dart';
 import '../widgets/paper_tile.dart';
@@ -49,6 +48,22 @@ class _PapersScreenState extends ConsumerState<PapersScreen> {
     final downloadStates   = ref.watch(downloadProvider);
     final theme            = Theme.of(context);
 
+    ref.listen(downloadProvider, (prev, next) {
+      for (final entry in next.entries) {
+        if (entry.value.status == DownloadStatus.failed) {
+          final prevStatus = prev?[entry.key]?.status;
+          if (prevStatus == DownloadStatus.downloading) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Download failed. Please try again.'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        }
+      }
+    });
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -81,13 +96,6 @@ class _PapersScreenState extends ConsumerState<PapersScreen> {
           onRetry: () => ref.invalidate(papersProvider(params)),
         ),
         data: (papers) {
-          // Prefetch PDFs in the background
-          for (final p in papers) {
-            if (p.pdfUrl != null && p.pdfUrl!.isNotEmpty) {
-              ref.read(pdfCacheProvider(p.pdfUrl!).future).ignore();
-            }
-          }
-
           final filtered = _showDownloadedOnly
               ? papers.where((p) =>
                   downloadStates[p.id]?.status == DownloadStatus.downloaded)

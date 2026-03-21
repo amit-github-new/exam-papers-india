@@ -12,28 +12,32 @@ const _prefsKey = 'downloaded_papers_v1';
 
 // ── Download status ────────────────────────────────────────────────────────────
 
-enum DownloadStatus { notDownloaded, downloading, downloaded }
+enum DownloadStatus { notDownloaded, downloading, downloaded, failed }
 
 class DownloadState {
   final DownloadStatus status;
   final double progress; // 0.0 – 1.0
   final String? localPath;
+  final String? error;
 
   const DownloadState({
     this.status = DownloadStatus.notDownloaded,
     this.progress = 0.0,
     this.localPath,
+    this.error,
   });
 
   DownloadState copyWith({
     DownloadStatus? status,
     double? progress,
     String? localPath,
+    String? error,
   }) =>
       DownloadState(
         status: status ?? this.status,
         progress: progress ?? this.progress,
         localPath: localPath ?? this.localPath,
+        error: error ?? this.error,
       );
 }
 
@@ -194,11 +198,14 @@ class DownloadNotifier extends StateNotifier<Map<String, DownloadState>> {
           localPath: localPath,
         ),
       };
-    } catch (_) {
-      // Reset to not-downloaded on any failure
-      final updated = Map<String, DownloadState>.from(state);
-      updated.remove(paper.id);
-      state = updated;
+    } catch (e) {
+      state = {
+        ...state,
+        paper.id: DownloadState(
+          status: DownloadStatus.failed,
+          error: e.toString(),
+        ),
+      };
     }
   }
 
