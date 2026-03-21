@@ -76,6 +76,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           localPath:    state.uri.queryParameters['localPath'],
           paperId:      state.uri.queryParameters['paperId'],
           examId:       state.uri.queryParameters['examId'],
+          examName:     state.uri.queryParameters['examName'],
           year:         int.tryParse(state.uri.queryParameters['year'] ?? ''),
           categoryId:   state.uri.queryParameters['categoryId'],
           categoryName: state.uri.queryParameters['categoryName'],

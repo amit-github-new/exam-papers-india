@@ -25,6 +25,7 @@ class PDFViewerScreen extends ConsumerStatefulWidget {
   // Optional paper metadata — enables Download button in viewer
   final String? paperId;
   final String? examId;
+  final String? examName;
   final int? year;
   final String? categoryId;
   final String? categoryName;
@@ -36,6 +37,7 @@ class PDFViewerScreen extends ConsumerStatefulWidget {
     this.localPath,
     this.paperId,
     this.examId,
+    this.examName,
     this.year,
     this.categoryId,
     this.categoryName,
@@ -110,9 +112,16 @@ class _PDFViewerScreenState extends ConsumerState<PDFViewerScreen> {
       });
 
   void _share() {
-    final url = widget.pdfUrl;
-    if (url.isEmpty) return;
-    Share.share('${widget.title}\n$url', subject: widget.title);
+    final parts = <String>[
+      if (widget.examName != null && widget.examName!.isNotEmpty) widget.examName!,
+      if (widget.year != null) widget.year.toString(),
+      widget.title,
+    ];
+    final paperInfo = parts.join(' | ');
+    Share.share(
+      '📚 $paperInfo\n\nFind previous year exam papers on Exam Papers India!\n\nhttps://play.google.com/store/apps/details?id=com.exampapersindia.exam_papers_app',
+      subject: paperInfo,
+    );
   }
 
   void _download() {

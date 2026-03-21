@@ -14,18 +14,11 @@ import '../../../core/providers/realtime_provider.dart';
 import '../providers/exam_provider.dart';
 import '../widgets/exam_card.dart';
 
-class ExamListScreen extends ConsumerStatefulWidget {
+class ExamListScreen extends ConsumerWidget {
   const ExamListScreen({super.key});
 
   @override
-  ConsumerState<ExamListScreen> createState() => _ExamListScreenState();
-}
-
-class _ExamListScreenState extends ConsumerState<ExamListScreen> {
-  String _query = '';
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final examsAsync = ref.watch(examsProvider);
     final theme = Theme.of(context);
 
@@ -107,31 +100,6 @@ class _ExamListScreenState extends ConsumerState<ExamListScreen> {
               ],
             ),
 
-            // ── Search bar ────────────────────────────────────────────────
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-              sliver: SliverToBoxAdapter(
-                child: SearchBar(
-                  hintText: 'Search exams…',
-                  leading: const Icon(Icons.search_rounded),
-                  trailing: _query.isNotEmpty
-                      ? [
-                          IconButton(
-                            icon: const Icon(Icons.close_rounded),
-                            onPressed: () => setState(() => _query = ''),
-                          )
-                        ]
-                      : null,
-                  onChanged: (val) => setState(() => _query = val.trim()),
-                  elevation: const WidgetStatePropertyAll(0),
-                  backgroundColor: WidgetStatePropertyAll(
-                      cs.surfaceContainerHighest),
-                  padding: const WidgetStatePropertyAll(
-                      EdgeInsets.symmetric(horizontal: 16)),
-                ),
-              ),
-            ),
-
             // ── Section header ────────────────────────────────────────────
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
@@ -139,13 +107,12 @@ class _ExamListScreenState extends ConsumerState<ExamListScreen> {
                 child: Row(
                   children: [
                     Text(
-                      _query.isEmpty ? 'All Exams' : 'Results',
+                      'All Exams',
                       style: theme.textTheme.titleLarge
                           ?.copyWith(fontWeight: FontWeight.w700),
                     ),
                     const Spacer(),
                     examsAsync.whenData((exams) {
-                      final filtered = _filtered(exams);
                       return Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 4),
@@ -154,7 +121,7 @@ class _ExamListScreenState extends ConsumerState<ExamListScreen> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          '${filtered.length} exams',
+                          '${exams.length} exams',
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: cs.primary,
                             fontWeight: FontWeight.w600,
@@ -180,15 +147,11 @@ class _ExamListScreenState extends ConsumerState<ExamListScreen> {
                 ),
               ),
               data: (exams) {
-                final filtered = _filtered(exams);
-
-                if (filtered.isEmpty) {
-                  return SliverFillRemaining(
+                if (exams.isEmpty) {
+                  return const SliverFillRemaining(
                     child: AppEmptyWidget(
-                      title: _query.isEmpty ? 'No Exams Found' : 'No Results',
-                      subtitle: _query.isEmpty
-                          ? 'No exam papers are available at the moment.\nCheck back soon.'
-                          : 'No exams match "$_query".',
+                      title: 'No Exams Found',
+                      subtitle: 'No exam papers are available at the moment.\nCheck back soon.',
                       icon: Icons.school_rounded,
                     ),
                   );
@@ -206,7 +169,7 @@ class _ExamListScreenState extends ConsumerState<ExamListScreen> {
                     ),
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
-                        final exam = filtered[index];
+                        final exam = exams[index];
                         return ExamCard(
                           exam: exam,
                           onTap: () => context.pushNamed(
@@ -216,7 +179,7 @@ class _ExamListScreenState extends ConsumerState<ExamListScreen> {
                           ),
                         );
                       },
-                      childCount: filtered.length,
+                      childCount: exams.length,
                     ),
                   ),
                 );
@@ -226,15 +189,5 @@ class _ExamListScreenState extends ConsumerState<ExamListScreen> {
         ),
       ),
     );
-  }
-
-  List _filtered(List exams) {
-    if (_query.isEmpty) return exams;
-    final q = _query.toLowerCase();
-    return exams
-        .where((e) =>
-            e.name.toLowerCase().contains(q) ||
-            e.shortName.toLowerCase().contains(q))
-        .toList();
   }
 }

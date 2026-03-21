@@ -140,6 +140,7 @@ class _PapersScreenState extends ConsumerState<PapersScreen> {
                                 'title':        paper.title,
                                 'paperId':      paper.id,
                                 'examId':       paper.examId,
+                                'examName':     widget.examName,
                                 'year':         paper.year.toString(),
                                 'categoryId':   paper.categoryId,
                                 'categoryName': paper.categoryName,
