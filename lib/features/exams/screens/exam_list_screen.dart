@@ -27,12 +27,24 @@ class ExamListScreen extends ConsumerWidget {
 
     ref.listen(isOfflineProvider, (prev, isOffline) {
       if (isOffline && prev == false) {
+        // Just went offline
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('You\'re offline — some content may not load'),
+            content: Text('You\'re offline — showing cached data'),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
             duration: Duration(seconds: 4),
+          ),
+        );
+      } else if (!isOffline && prev == true) {
+        // Just came back online — refresh all data providers
+        ref.invalidate(examsProvider);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Back online — refreshing data'),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 3),
           ),
         );
       }
