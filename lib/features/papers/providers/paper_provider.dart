@@ -15,6 +15,7 @@ final papersProvider =
     FutureProvider.autoDispose.family<List<PaperModel>, PaperParams>(
   (ref, params) async {
     ref.keepAlive();
+    await supabaseReadyFuture;
     return ref.watch(paperRepositoryProvider).getPapers(params);
   },
 );

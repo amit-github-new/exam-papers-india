@@ -15,6 +15,7 @@ import 'core/providers/theme_provider.dart';
 import 'core/services/ad_service.dart';
 import 'core/theme/app_theme.dart';
 import 'firebase_options.dart';
+import 'services/supabase_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,18 +43,27 @@ Future<void> main() async {
     ),
   );
 
-  // ── Supabase (must complete before runApp — local config, no network) ──────
-  await Supabase.initialize(
-    url:     AppConstants.supabaseUrl,
-    anonKey: AppConstants.supabaseAnonKey,
-  );
-
   // ── Start the app immediately ─────────────────────────────────────────────
   runApp(const ProviderScope(child: ExamPapersApp()));
 
   // ── Non-critical SDKs — initialized in background after first frame ───────
   unawaited(FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true));
   unawaited(AdService.initialize());
+
+  // ── Supabase — initialized in background, data providers wait for it ──────
+  // Moving this after runApp() prevents the gray screen on offline startup.
+  // markSupabaseReady() unblocks all data providers once init completes.
+  try {
+    await Supabase.initialize(
+      url:     AppConstants.supabaseUrl,
+      anonKey: AppConstants.supabaseAnonKey,
+    );
+  } catch (_) {
+    // Init failed (e.g. some edge case) — unblock providers anyway so
+    // they can show the offline error state instead of loading forever.
+  } finally {
+    markSupabaseReady();
+  }
 }
 
 class ExamPapersApp extends ConsumerWidget {

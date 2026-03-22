@@ -6,10 +6,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../services/supabase_service.dart';
 
 /// Streams INSERT events from the `papers` table via Supabase Realtime.
-/// Consumers can listen to invalidate their caches when new papers arrive.
+/// Waits for Supabase to be initialized before subscribing.
 final newPaperStreamProvider = StreamProvider.autoDispose<Map<String, dynamic>>(
-  (ref) {
-    final client     = ref.watch(supabaseClientProvider);
+  (ref) async* {
+    // Wait until Supabase is initialized before touching the client.
+    await supabaseReadyFuture;
+
+    final client     = ref.read(supabaseClientProvider);
     final controller = StreamController<Map<String, dynamic>>.broadcast();
 
     final channel = client
@@ -27,6 +30,6 @@ final newPaperStreamProvider = StreamProvider.autoDispose<Map<String, dynamic>>(
       controller.close();
     });
 
-    return controller.stream;
+    yield* controller.stream;
   },
 );

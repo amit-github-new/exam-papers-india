@@ -13,5 +13,6 @@ final examRepositoryProvider = Provider<IExamRepository>((ref) {
 /// Exam list provider with in-memory caching via [keepAlive].
 final examsProvider = FutureProvider.autoDispose<List<ExamModel>>((ref) async {
   ref.keepAlive();
+  await supabaseReadyFuture;
   return ref.watch(examRepositoryProvider).getExams();
 });

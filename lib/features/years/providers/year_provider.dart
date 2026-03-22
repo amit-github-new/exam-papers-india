@@ -15,6 +15,7 @@ final yearsProvider =
     FutureProvider.autoDispose.family<List<YearModel>, String>(
   (ref, examId) async {
     ref.keepAlive();
+    await supabaseReadyFuture;
     return ref.watch(yearRepositoryProvider).getYears(examId);
   },
 );

@@ -36,6 +36,7 @@ final categoriesProvider =
     FutureProvider.autoDispose.family<List<CategoryModel>, CategoryParams>(
   (ref, params) async {
     ref.keepAlive();
+    await supabaseReadyFuture;
     return ref
         .watch(categoryRepositoryProvider)
         .getCategories(params.examId, params.year);
